@@ -1,116 +1,233 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>DK Painel</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0d0d0d;
-      color: #99ccff;
-    }
-    .container {
-      max-width: 400px;
-      margin: 80px auto;
-      background: #1a1a1a;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #66ccff;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      margin: 12px 0;
-      border-radius: 6px;
-      background: #111;
-      color: #99ccff;
-      outline: none;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #00aaff;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #0088cc;
-    }
-    #painel {
-      display: none;
-      text-align: center;
-    }
-    #perfil img {
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Painel Moderno com Opções</title>
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body, html {
+    height: 100%;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* CARD com fundo glass + sombra + blob animado */
+  .card {
+    position: relative;
+    width: 280px;
+    height: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 20px 20px 60px #0a3a4a, -20px -20px 60px #2e5870;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(25px);
+    color: #cce7ff;
+    user-select: none;
+  }
+  .bg {
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 260px; height: 330px;
+    z-index: 2;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(30px);
+    border-radius: 15px;
+    outline: 1.5px solid rgba(255,255,255,0.2);
+  }
+  .blob {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: #00aaff;
+    opacity: 0.3;
+    filter: blur(18px);
+    animation: blob-bounce 7s infinite ease-in-out;
+    transform-origin: center center;
+  }
+  @keyframes blob-bounce {
+    0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+    25% { transform: translate(-50%, -50%) translate3d(50px, -40px, 0); }
+    50% { transform: translate(-50%, -50%) translate3d(0, 60px, 0); }
+    75% { transform: translate(-50%, -50%) translate3d(-50px, -30px, 0); }
+  }
+
+  /* Conteúdo por cima */
+  h2 {
+    z-index: 10;
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #00d4ff;
+    letter-spacing: 1.3px;
+  }
+  p {
+    z-index: 10;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #99d9ffaa;
+  }
+
+  /* Botão básico */
+  button {
+    z-index: 10;
+    cursor: pointer;
+    background: #00d4ff;
+    color: #003344;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 0 15px #00d4ffaa;
+    transition: all 0.25s ease-in-out;
+    margin-bottom: 20px;
+  }
+  button:hover {
+    background: #00f0ff;
+    box-shadow: 0 0 25px #00f0ffcc;
+  }
+
+  /* Select dropdown estilo Uiverse */
+  .select {
+    width: 220px;
+    cursor: pointer;
+    position: relative;
+    color: #d0eaff;
+    user-select: none;
+    z-index: 10;
+  }
+  .selected {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .arrow {
+    height: 12px;
+    width: 18px;
+    fill: #00d4ff;
+    transition: transform 0.3s ease;
+    transform: rotate(-90deg);
+  }
+  .select:hover > .options {
+    opacity: 1;
+    top: 50px;
+    pointer-events: auto;
+  }
+  .select:hover > .selected .arrow {
+    transform: rotate(0deg);
+  }
+  .options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    box-shadow: 0 0 10px #00d4ff88;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  .option {
+    padding: 10px 20px;
+    color: #aaddff;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+  }
+  .option:hover {
+    background-color: #007799aa;
+  }
+  input[type="radio"] {
+    display: none;
+  }
+  input[type="radio"]:checked + label {
+    background-color: #00d4ffcc;
+    color: #002233;
+    font-weight: 700;
+  }
+  label {
+    display: block;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+
+  /* Exibe seleção no .selected via JS */
+</style>
 </head>
 <body>
-  <div class="container" id="login">
-    <h2>Login do DK</h2>
-    <input type="text" id="cookie" placeholder=".ROBLOSECURITY" required />
-    <button onclick="login()">Entrar</button>
+
+  <div class="card">
+    <div class="bg"></div>
+    <div class="blob"></div>
+
+    <h2>Configurações</h2>
+    <p>Escolha uma opção para customizar</p>
+
+    <div class="select" id="configSelect">
+      <div class="selected" data-default="Selecione" data-one="Opção 1" data-two="Opção 2" data-three="Opção 3">
+        Selecione
+        <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+        </svg>
+      </div>
+      <div class="options">
+        <div title="all">
+          <input id="all" name="option" type="radio" checked />
+          <label class="option" for="all" data-txt="Selecione">Selecione</label>
+        </div>
+        <div title="option-1">
+          <input id="option-1" name="option" type="radio" />
+          <label class="option" for="option-1" data-txt="Opção 1">Opção 1</label>
+        </div>
+        <div title="option-2">
+          <input id="option-2" name="option" type="radio" />
+          <label class="option" for="option-2" data-txt="Opção 2">Opção 2</label>
+        </div>
+        <div title="option-3">
+          <input id="option-3" name="option" type="radio" />
+          <label class="option" for="option-3" data-txt="Opção 3">Opção 3</label>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="container" id="painel">
-    <h2>Painel Privado</h2>
-    <p>Nome: <span id="nome">...</span></p>
-    <p>ID: <span id="id">...</span></p>
-    <div id="perfil"></div>
-  </div>
+<script>
+  const select = document.getElementById('configSelect');
+  const selected = select.querySelector('.selected');
 
-  <script>
-    async function login() {
-      const input = document.getElementById('cookie');
-      const cookie = input.value.trim();
-      if (!cookie) return alert("Preencha o cookie, DK.");
+  // Atualiza texto no .selected conforme radio selecionado
+  select.querySelectorAll('input[name="option"]').forEach(input => {
+    input.addEventListener('change', e => {
+      const val = e.target.nextElementSibling.getAttribute('data-txt');
+      selected.textContent = val;
+      selected.appendChild(select.querySelector('.arrow')); // reaplica arrow no final
+    });
+  });
+</script>
 
-      localStorage.setItem('cookieDK', cookie);
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('painel').style.display = 'block';
-      carregarPerfil();
-    }
-
-    async function carregarPerfil() {
-      const cookie = localStorage.getItem('cookieDK') || '';
-      try {
-        const res = await fetch('http://localhost:3000/roblox', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ cookie })
-        });
-        const data = await res.json();
-        if (data.error) return alert("Cookie inválido ou expirado.");
-
-        document.getElementById('nome').innerText = data.UserName;
-        document.getElementById('id').innerText = data.UserID;
-
-        const img = document.createElement('img');
-        img.src = data.ThumbnailUrl || `https://www.roblox.com/headshot-thumbnail/image?userId=${data.UserID}&width=150&height=150&format=png`;
-        img.style.width = '100px';
-        document.getElementById('perfil').appendChild(img);
-      } catch (err) {
-        alert("Erro ao conectar com a API.");
-      }
-    }
-
-    // Se já tiver cookie salvo
-    if (localStorage.getItem('cookieDK')) {
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('painel').style.display = 'block';
-      carregarPerfil();
-    }
-  </script>
 </body>
 </html>
