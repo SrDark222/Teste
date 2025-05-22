@@ -6,8 +6,14 @@
   <title>Abas com Tailwind</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
-  <div class="w-full max-w-2xl p-4">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen relative overflow-hidden">
+
+  <!-- BACKGROUND GIF OU IMG -->
+  <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('img/menor_dkzin.png');"></div>
+  <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
+
+  <!-- CONTEÚDO -->
+  <div class="w-full max-w-2xl p-4 z-20">
     <!-- Tabs -->
     <div class="flex justify-between bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
       <button onclick="showTab('dashboard')" class="tab-btn flex-1 p-4 hover:bg-gray-700 transition" id="btn-dashboard">
@@ -51,14 +57,10 @@
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'))
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('bg-gray-700', 'text-blue-400'))
-
       document.getElementById(id).classList.remove('hidden')
       document.getElementById('btn-' + id).classList.add('bg-gray-700', 'text-blue-400')
     }
-
-    // ativar o primeiro por padrão
     showTab('dashboard')
   </script>
 </body>
-    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('img/menor_dkzin.png');"></div>
-          </html>
+</html>
