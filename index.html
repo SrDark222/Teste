@@ -3,228 +3,302 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Painel Moderno com Opções</title>
+<title>Login Cookie + Painel</title>
 <style>
   /* Reset básico */
   * {
     box-sizing: border-box;
-    margin: 0; padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Trebuchet MS", sans-serif;
   }
-  body, html {
-    height: 100%;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  body {
+    background: #f5f7fa;
+    margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 30px 0;
+    color: #0e2954;
   }
 
-  /* CARD com fundo glass + sombra + blob animado */
-  .card {
-    position: relative;
-    width: 280px;
-    height: 350px;
-    border-radius: 20px;
+  /* Container login */
+  .form-container {
+    width: 400px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     overflow: hidden;
-    box-shadow: 20px 20px 60px #0a3a4a, -20px -20px 60px #2e5870;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 25px 20px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(25px);
-    color: #cce7ff;
-    user-select: none;
-  }
-  .bg {
-    position: absolute;
-    top: 10px; left: 10px;
-    width: 260px; height: 330px;
-    z-index: 2;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(30px);
-    border-radius: 15px;
-    outline: 1.5px solid rgba(255,255,255,0.2);
-  }
-  .blob {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    left: 50%;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: #00aaff;
-    opacity: 0.3;
-    filter: blur(18px);
-    animation: blob-bounce 7s infinite ease-in-out;
-    transform-origin: center center;
-  }
-  @keyframes blob-bounce {
-    0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
-    25% { transform: translate(-50%, -50%) translate3d(50px, -40px, 0); }
-    50% { transform: translate(-50%, -50%) translate3d(0, 60px, 0); }
-    75% { transform: translate(-50%, -50%) translate3d(-50px, -30px, 0); }
-  }
-
-  /* Conteúdo por cima */
-  h2 {
-    z-index: 10;
-    margin-bottom: 15px;
-    font-weight: 700;
-    font-size: 1.6rem;
-    color: #00d4ff;
-    letter-spacing: 1.3px;
-  }
-  p {
-    z-index: 10;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #99d9ffaa;
-  }
-
-  /* Botão básico */
-  button {
-    z-index: 10;
-    cursor: pointer;
-    background: #00d4ff;
-    color: #003344;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
-    box-shadow: 0 0 15px #00d4ffaa;
-    transition: all 0.25s ease-in-out;
-    margin-bottom: 20px;
-  }
-  button:hover {
-    background: #00f0ff;
-    box-shadow: 0 0 25px #00f0ffcc;
-  }
-
-  /* Select dropdown estilo Uiverse */
-  .select {
-    width: 220px;
-    cursor: pointer;
     position: relative;
-    color: #d0eaff;
-    user-select: none;
-    z-index: 10;
   }
-  .selected {
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-size: 1rem;
+  .lock-icon {
+    font-size: 20px;
+    color: #0e2954;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  form.form {
+    padding: 20px 15px;
+    position: relative;
+  }
+  .form-title {
+    margin: 10px 0 5px;
+    font-size: 25px;
+    font-weight: 700;
+  }
+  .form-sub-title {
+    margin: 0 0 20px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .field-container {
+    position: relative;
+    border: 1px solid #a7a7a7;
+    border-radius: 8px;
+    height: 45px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
-  .arrow {
-    height: 12px;
-    width: 18px;
-    fill: #00d4ff;
-    transition: transform 0.3s ease;
-    transform: rotate(-90deg);
-  }
-  .select:hover > .options {
-    opacity: 1;
-    top: 50px;
-    pointer-events: auto;
-  }
-  .select:hover > .selected .arrow {
-    transform: rotate(0deg);
-  }
-  .options {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .input {
     width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0;
-    box-shadow: 0 0 10px #00d4ff88;
-    opacity: 0;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    color: #0e2954;
+  }
+  .placeholder {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a7a7a7;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: 0.3s;
+    font-size: 16px;
   }
-  .option {
-    padding: 10px 20px;
-    color: #aaddff;
+  .input:focus + .placeholder,
+  .input:not(:placeholder-shown) + .placeholder {
+    top: 5px;
+    font-size: 12px;
+    color: #0e2954;
+  }
+  button.btn {
+    width: 100%;
+    height: 40px;
+    background: #0e2954;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
     font-weight: 600;
-    transition: background-color 0.2s ease;
+    cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
+    transition: background 0.3s;
   }
-  .option:hover {
-    background-color: #007799aa;
+  button.btn:hover {
+    background: #122f68;
   }
-  input[type="radio"] {
+  /* Toggle checkbox invisível */
+  .toggle-input {
     display: none;
   }
-  input[type="radio"]:checked + label {
-    background-color: #00d4ffcc;
-    color: #002233;
-    font-weight: 700;
+
+  /* Mostrar senha ou cookie via toggle */
+  .login-card, .password-card {
+    transition: all 0.3s ease-in-out;
   }
-  label {
+  .login-card {
     display: block;
-    cursor: pointer;
-    border-radius: 10px;
+  }
+  .password-card {
+    display: none;
+  }
+  .toggle-input:checked ~ .login-card {
+    display: none;
+  }
+  .toggle-input:checked ~ .password-card {
+    display: block;
   }
 
-  /* Exibe seleção no .selected via JS */
+  /* Painel principal */
+  .panel {
+    width: 600px;
+    margin-left: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    display: none;
+    flex-direction: column;
+  }
+  .panel-header {
+    display: flex;
+    background: #0e2954;
+    border-radius: 8px 8px 0 0;
+  }
+  .panel-header button {
+    flex: 1;
+    padding: 15px 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+    border-bottom: 3px solid transparent;
+  }
+  .panel-header button.active {
+    border-bottom: 3px solid #ff4141;
+    background: #122f68;
+  }
+  .panel-body {
+    padding: 20px;
+    min-height: 300px;
+    color: #0e2954;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
 </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="bg"></div>
-    <div class="blob"></div>
-
-    <h2>Configurações</h2>
-    <p>Escolha uma opção para customizar</p>
-
-    <div class="select" id="configSelect">
-      <div class="selected" data-default="Selecione" data-one="Opção 1" data-two="Opção 2" data-three="Opção 3">
-        Selecione
-        <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-        </svg>
+<!-- Tela login cookie -->
+<div class="form-container" id="login-container">
+  <form class="form" id="login-form" onsubmit="return false;">
+    <svg xmlns="http://www.w3.org/2000/svg" class="lock-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.243 2 7 4.243 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7c0-2.757-2.243-5-5-5zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm4 10.723V20h-2v-2.277a1.993 1.993 0 0 1 .567-3.677A2.001 2.001 0 0 1 14 16a1.99 1.99 0 0 1-1 1.723z"></path></svg>
+    <p class="form-title">Welcome back</p>
+    <p class="form-sub-title">Glad to see you again. Login to your account below.</p>
+    <input class="toggle-input" id="toggle-checkbox" type="checkbox" />
+    <div class="login-card">
+      <div class="field-container">
+        <input id="cookie-input" placeholder=" " class="input" type="text" autocomplete="off" />
+        <span class="placeholder">Cookie</span>
       </div>
-      <div class="options">
-        <div title="all">
-          <input id="all" name="option" type="radio" checked />
-          <label class="option" for="all" data-txt="Selecione">Selecione</label>
-        </div>
-        <div title="option-1">
-          <input id="option-1" name="option" type="radio" />
-          <label class="option" for="option-1" data-txt="Opção 1">Opção 1</label>
-        </div>
-        <div title="option-2">
-          <input id="option-2" name="option" type="radio" />
-          <label class="option" for="option-2" data-txt="Opção 2">Opção 2</label>
-        </div>
-        <div title="option-3">
-          <input id="option-3" name="option" type="radio" />
-          <label class="option" for="option-3" data-txt="Opção 3">Opção 3</label>
-        </div>
-      </div>
+      <button class="btn" id="continue-cookie">Continue</button>
+      <p style="margin-top: 10px; font-size: 12px; color: #a7a7a7; cursor: pointer;" onclick="document.getElementById('toggle-checkbox').checked = true;">Usar login com senha</p>
     </div>
+    <div class="password-card">
+      <div class="field-container">
+        <input id="email-input" placeholder=" " class="input" type="email" autocomplete="off" />
+        <span class="placeholder">Email</span>
+      </div>
+      <div class="field-container">
+        <input id="password-input" placeholder=" " class="input" type="password" autocomplete="off" />
+        <span class="placeholder">Password</span>
+      </div>
+      <button class="btn" id="login-pass">Login</button>
+      <p style="margin-top: 10px; font-size: 12px; color: #a7a7a7; cursor: pointer;" onclick="document.getElementById('toggle-checkbox').checked = false;">Usar login com cookie</p>
+    </div>
+  </form>
+</div>
 
+<!-- Painel principal -->
+<div class="panel" id="panel">
+  <div class="panel-header">
+    <button class="tab-btn active" data-tab="principal">Principal</button>
+    <button class="tab-btn" data-tab="profile">Profile</button>
+    <button class="tab-btn" data-tab="config">Configurações</button>
   </div>
+  <div class="panel-body">
+    <div id="principal" class="tab-content active">
+      <!-- Aqui entra o código principal do toggle, etc -->
+      <h2>Painel Principal</h2>
+      <p>Aqui vai o código que controla o toggle e as funções que você quiser.</p>
+    </div>
+    <div id="profile" class="tab-content">
+      <h2>Profile</h2>
+      <p>Detalhes do perfil do usuário aqui.</p>
+    </div>
+    <div id="config" class="tab-content">
+      <h2>Configurações</h2>
+      <p>Configurações e preferências do usuário.</p>
+    </div>
+  </div>
+</div>
 
 <script>
-  const select = document.getElementById('configSelect');
-  const selected = select.querySelector('.selected');
+  // Checa cookie e mostra painel ou login
+  const loginContainer = document.getElementById('login-container');
+  const panel = document.getElementById('panel');
 
-  // Atualiza texto no .selected conforme radio selecionado
-  select.querySelectorAll('input[name="option"]').forEach(input => {
-    input.addEventListener('change', e => {
-      const val = e.target.nextElementSibling.getAttribute('data-txt');
-      selected.textContent = val;
-      selected.appendChild(select.querySelector('.arrow')); // reaplica arrow no final
+  function setCookie(name, value, days = 7) {
+    let expires = "";
+    if(days){
+      const date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+  }
+  function getCookie(name) {
+    const c = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return c ? decodeURIComponent(c.pop()) : null;
+  }
+
+  function showPanel() {
+    loginContainer.style.display = 'none';
+    panel.style.display = 'flex';
+  }
+  function showLogin() {
+    loginContainer.style.display = 'block';
+    panel.style.display = 'none';
+  }
+
+  // Se cookie salvo, mostra painel direto
+  if(getCookie('user_cookie')){
+    showPanel();
+  } else {
+    showLogin();
+  }
+
+  // Botão continuar com cookie
+  document.getElementById('continue-cookie').addEventListener('click', e => {
+    e.preventDefault();
+    const cookieVal = document.getElementById('cookie-input').value.trim();
+    if(cookieVal.length < 5){
+      alert('Cookie inválido');
+      return;
+    }
+    setCookie('user_cookie', cookieVal, 7);
+    showPanel();
+  });
+
+  // Botão login com senha (fake, só para exemplo)
+  document.getElementById('login-pass').addEventListener('click', e => {
+    e.preventDefault();
+    const email = document.getElementById('email-input').value.trim();
+    const pass = document.getElementById('password-input').value.trim();
+    if(email.length < 5 || pass.length < 3){
+      alert('Email ou senha inválidos');
+      return;
+    }
+    // Aqui faz sua validação real ou API, mas vou só salvar cookie fake
+    setCookie('user_cookie', btoa(email + ':' + pass), 7);
+    showPanel();
+  });
+
+  // Controle das abas do painel
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // ativa botão
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // mostra aba
+      const tab = btn.getAttribute('data-tab');
+      tabContents.forEach(tc => {
+        tc.classList.toggle('active', tc.id === tab);
+      });
     });
   });
 </script>
