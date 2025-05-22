@@ -2,128 +2,114 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Painel do DK</title>
+  <title>DK Painel</title>
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif;}
     body {
-      background: #000;
-      color: #aee2ff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d0d0d;
+      color: #99ccff;
     }
-    #login, #painel {
-      background: #0a0a0a;
-      border: 1px solid #1e1e1e;
-      box-shadow: 0 0 15px #0ff5ff55;
-      padding: 25px;
-      border-radius: 12px;
-      width: 300px;
-      display: none;
-      flex-direction: column;
-      gap: 15px;
-      animation: fadeIn 0.5s ease;
-    }
-    #login.active, #painel.active {display: flex;}
-    input {
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      outline: none;
+    .container {
+      max-width: 400px;
+      margin: 80px auto;
       background: #1a1a1a;
-      color: #aee2ff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #66ccff;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      margin: 12px 0;
+      border-radius: 6px;
+      background: #111;
+      color: #99ccff;
+      outline: none;
     }
     button {
-      background: #0ff5ff;
-      color: #000;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      background: #00aaff;
+      color: #fff;
       font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       transition: background 0.2s;
     }
-    button:hover {background: #09d3e0;}
-    .aba-btns {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
+    button:hover {
+      background: #0088cc;
     }
-    .aba {
+    #painel {
       display: none;
-      padding-top: 15px;
+      text-align: center;
     }
-    .aba.active {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
+    #perfil img {
+      margin-top: 10px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-
-  <div id="login" class="active">
-    <h3>Login com Cookie</h3>
-    <input type="text" id="cookie" placeholder="Cole seu cookie..." required>
-    <button onclick="fazerLogin()">Entrar</button>
+  <div class="container" id="login">
+    <h2>Login do DK</h2>
+    <input type="text" id="cookie" placeholder=".ROBLOSECURITY" required />
+    <button onclick="login()">Entrar</button>
   </div>
 
-  <div id="painel">
-    <h2>Painel do DK</h2>
-    <div class="aba-btns">
-      <button onclick="trocarAba('perfil')">Perfil</button>
-      <button onclick="trocarAba('amigos')">Amigos</button>
-      <button onclick="trocarAba('seguir')">Seguindo</button>
-    </div>
-
-    <div id="perfil" class="aba active">
-      <p><b>Nome:</b> <span id="nome"></span></p>
-      <p><b>ID:</b> <span id="id"></span></p>
-    </div>
-
-    <div id="amigos" class="aba">
-      <p>Função de remover amigos aqui...</p>
-    </div>
-
-    <div id="seguir" class="aba">
-      <p>Função de parar de seguir aqui...</p>
-    </div>
+  <div class="container" id="painel">
+    <h2>Painel Privado</h2>
+    <p>Nome: <span id="nome">...</span></p>
+    <p>ID: <span id="id">...</span></p>
+    <div id="perfil"></div>
   </div>
 
   <script>
-    function fazerLogin() {
-      const cookie = document.getElementById('cookie').value.trim();
-      if (!cookie) return alert("Cookie obrigatório, DK!");
+    async function login() {
+      const input = document.getElementById('cookie');
+      const cookie = input.value.trim();
+      if (!cookie) return alert("Preencha o cookie, DK.");
+
       localStorage.setItem('cookieDK', cookie);
-      document.getElementById('login').classList.remove('active');
-      document.getElementById('painel').classList.add('active');
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
       carregarPerfil();
     }
 
-    function trocarAba(qual) {
-      document.querySelectorAll('.aba').forEach(a => a.classList.remove('active'));
-      document.getElementById(qual).classList.add('active');
-    }
-
-    function carregarPerfil() {
+    async function carregarPerfil() {
       const cookie = localStorage.getItem('cookieDK') || '';
-      // Simulação de perfil, troca por fetch real se quiser depois
-      document.getElementById('nome').innerText = 'DKZIN';
-      document.getElementById('id').innerText = '1979';
+      try {
+        const res = await fetch('http://localhost:3000/roblox', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ cookie })
+        });
+        const data = await res.json();
+        if (data.error) return alert("Cookie inválido ou expirado.");
+
+        document.getElementById('nome').innerText = data.UserName;
+        document.getElementById('id').innerText = data.UserID;
+
+        const img = document.createElement('img');
+        img.src = data.ThumbnailUrl || `https://www.roblox.com/headshot-thumbnail/image?userId=${data.UserID}&width=150&height=150&format=png`;
+        img.style.width = '100px';
+        document.getElementById('perfil').appendChild(img);
+      } catch (err) {
+        alert("Erro ao conectar com a API.");
+      }
     }
 
-    // Se já tiver cookie salvo, pula pro painel
-    window.onload = () => {
-      if (localStorage.getItem('cookieDK')) {
-        document.getElementById('login').classList.remove('active');
-        document.getElementById('painel').classList.add('active');
-        carregarPerfil();
-      } else {
-        document.getElementById('login').classList.add('active');
-      }
+    // Se já tiver cookie salvo
+    if (localStorage.getItem('cookieDK')) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      carregarPerfil();
     }
   </script>
 </body>
