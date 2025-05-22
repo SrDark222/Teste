@@ -1,101 +1,130 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ogar Cookie Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Painel do DK</title>
   <style>
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif;}
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      margin: 0;
-      padding: 0;
+      background: #000;
+      color: #aee2ff;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding-top: 40px;
-    }.input {
-  border: none;
-  padding: 1rem;
-  border-radius: 1rem;
-  background: #e8e8e8;
-  box-shadow: 20px 20px 60px #c5c5c5, -20px -20px 60px #ffffff;
-  transition: 0.3s;
-  width: 300px;
-}
-.input:focus {
-  outline: none;
-  background: #e8e8e8;
-  box-shadow: inset 20px 20px 60px #c5c5c5, inset -20px -20px 60px #ffffff;
-}
-
-button {
-  margin-top: 15px;
-  padding: 0.7rem 2rem;
-  border: none;
-  border-radius: 10px;
-  background-color: #1db954;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.tabs {
-  display: flex;
-  margin-top: 40px;
-}
-.tab-button {
-  padding: 10px 20px;
-  background: #ddd;
-  border-radius: 10px 10px 0 0;
-  cursor: pointer;
-  margin: 0 5px;
-}
-.tab-button.active {
-  background: #fff;
-  font-weight: bold;
-}
-
-.tab-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 0 0 10px 10px;
-  width: 80%;
-  max-width: 600px;
-  display: none;
-}
-.tab-content.active {
-  display: block;
-}
-
+    }
+    #login, #painel {
+      background: #0a0a0a;
+      border: 1px solid #1e1e1e;
+      box-shadow: 0 0 15px #0ff5ff55;
+      padding: 25px;
+      border-radius: 12px;
+      width: 300px;
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      animation: fadeIn 0.5s ease;
+    }
+    #login.active, #painel.active {display: flex;}
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: #1a1a1a;
+      color: #aee2ff;
+    }
+    button {
+      background: #0ff5ff;
+      color: #000;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    button:hover {background: #09d3e0;}
+    .aba-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .aba {
+      display: none;
+      padding-top: 15px;
+    }
+    .aba.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
   </style>
 </head>
 <body>
-  <input type="text" class="input" placeholder="Insira seu cookie...">
-  <button>Login</button>  <div class="tabs">
-    <div class="tab-button active" onclick="openTab('profile')">Profile</div>
-    <div class="tab-button" onclick="openTab('funcoes')">Funções</div>
-    <div class="tab-button" onclick="openTab('config')">Configurações</div>
-  </div>  <div id="profile" class="tab-content active">
-    <h3>Perfil</h3>
-    <p><strong>Nome:</strong> DKzin</p>
-    <p><strong>ID:</strong> 000123456789</p>
-    <p><strong>Status:</strong> Logado</p>
-  </div>  <div id="funcoes" class="tab-content">
-    <h3>Funções Rápidas</h3>
-    <button>Remover todos amigos</button>
-    <button>Parar de seguir todos</button>
-    <button>Desativar DM de todos</button>
-  </div>  <div id="config" class="tab-content">
-    <h3>Configurações</h3>
-    <p><label>Cookie atual:</label><br><input type="text" class="input" value="Seu cookie..." /></p>
-    <button>Atualizar Cookie</button>
-    <button>Resetar Configs</button>
-  </div>  <script>
-    function openTab(tabId) {
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+
+  <div id="login" class="active">
+    <h3>Login com Cookie</h3>
+    <input type="text" id="cookie" placeholder="Cole seu cookie..." required>
+    <button onclick="fazerLogin()">Entrar</button>
+  </div>
+
+  <div id="painel">
+    <h2>Painel do DK</h2>
+    <div class="aba-btns">
+      <button onclick="trocarAba('perfil')">Perfil</button>
+      <button onclick="trocarAba('amigos')">Amigos</button>
+      <button onclick="trocarAba('seguir')">Seguindo</button>
+    </div>
+
+    <div id="perfil" class="aba active">
+      <p><b>Nome:</b> <span id="nome"></span></p>
+      <p><b>ID:</b> <span id="id"></span></p>
+    </div>
+
+    <div id="amigos" class="aba">
+      <p>Função de remover amigos aqui...</p>
+    </div>
+
+    <div id="seguir" class="aba">
+      <p>Função de parar de seguir aqui...</p>
+    </div>
+  </div>
+
+  <script>
+    function fazerLogin() {
+      const cookie = document.getElementById('cookie').value.trim();
+      if (!cookie) return alert("Cookie obrigatório, DK!");
+      localStorage.setItem('cookieDK', cookie);
+      document.getElementById('login').classList.remove('active');
+      document.getElementById('painel').classList.add('active');
+      carregarPerfil();
     }
-  </script></body>
+
+    function trocarAba(qual) {
+      document.querySelectorAll('.aba').forEach(a => a.classList.remove('active'));
+      document.getElementById(qual).classList.add('active');
+    }
+
+    function carregarPerfil() {
+      const cookie = localStorage.getItem('cookieDK') || '';
+      // Simulação de perfil, troca por fetch real se quiser depois
+      document.getElementById('nome').innerText = 'DKZIN';
+      document.getElementById('id').innerText = '1979';
+    }
+
+    // Se já tiver cookie salvo, pula pro painel
+    window.onload = () => {
+      if (localStorage.getItem('cookieDK')) {
+        document.getElementById('login').classList.remove('active');
+        document.getElementById('painel').classList.add('active');
+        carregarPerfil();
+      } else {
+        document.getElementById('login').classList.add('active');
+      }
+    }
+  </script>
+</body>
 </html>
